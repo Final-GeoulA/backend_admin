@@ -20,7 +20,7 @@ public class GeoulAAdminApplication {
 			public void addCorsMappings(CorsRegistry registry) {
 				System.out.println("Test==================");
 				registry.addMapping("/**")
-				.allowedOrigins("http://192.168.0.24:3001/" , "http://localhost:3001/")
+				.allowedOrigins("http://192.168.0.22:3001/" , "http://localhost:3001/")
 				.allowedHeaders("*")
 				.allowedMethods("*").maxAge(3600);
 			}
