@@ -27,8 +27,8 @@ public class SecurityAdminRepositoryTest {
 		System.out.println("Encoded Password: " + encodedPass);
 		
 		List<Admin> admin = Arrays.asList(
-				new Admin("admin1",encodedPass,Role.SUPERADMIN),
-				new Admin("admin2",encodedPass,Role.ADMIN)
+				new Admin("super",encodedPass,Role.SUPERADMIN),
+				new Admin("admin",encodedPass,Role.ADMIN)
 				);
 		for (Admin individual : admin) {
 			if (!adminRepository.existsByUsername(individual.getUsername())) {

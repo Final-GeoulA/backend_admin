@@ -4,15 +4,11 @@ import java.security.Key;
 import java.util.Date;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.SignatureAlgorithm;
-import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,7 +29,12 @@ public class JwtTokenProvider {
 		// JWT가 발급되고 나서 약 1시간(3600000 밀리초) 동안 만료시간을 설정
 		Date expireDate = new Date(now.getTime() + 3600000);
 		
+		String role = userDetails.getAuthorities().stream().map(GrantedAuthority::getAuthority)
+    			.findFirst().orElse("ADMIN");
+		System.out.println("UserDetails =>"+userDetails.getUsername() +","+role);
+
 		String jwtResult = Jwts.builder().setSubject(userDetails.getUsername())
+				.claim("role", role)
 				.setIssuedAt(new Date())
 				.setExpiration(expireDate)
 				.signWith(key, SignatureAlgorithm.HS512)
@@ -77,5 +78,14 @@ public class JwtTokenProvider {
 		return Jwts.parserBuilder().setSigningKey(key).build()
 				.parseClaimsJws(token).getBody().getSubject();
 		// 결과: JWT의 Subject(토큰의 소유자 정보)를 추출하여 반환한다.
+	}
+
+	public String getRole(String token) {
+		return Jwts.parserBuilder()
+				.setSigningKey(key)
+				.build()
+				.parseClaimsJws(token)
+				.getBody()
+				.get("role",String.class);
 	}
 }

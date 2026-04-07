@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import kr.co.ictedu.geoulA_admin.admins.Admin;
+import kr.co.ictedu.geoulA_admin.admins.AdminRepository;
+
 @RestController
 @CrossOrigin
 @RequestMapping("/api/auth")
@@ -23,11 +26,16 @@ public class AuthController {
 	
 	@Autowired
 	private JwtTokenProvider jwtTokenProvider;
+
+	@Autowired
+	private AdminRepository adminRepository;
 	
 	@PostMapping("/login")
 	public ResponseEntity<?> authenticateAdmin(@RequestBody AuthRequest authRequest) {
 		System.out.println("USERNAME: " + authRequest.getUsername());
 		System.out.println("PASSWORD: " + authRequest.getPassword());
+		Admin findRole = adminRepository.findByUsername(authRequest.getUsername()).get();
+		System.out.println("ROLE: " + findRole.getRole());
 		
 		Authentication authentication = authenticationManager.authenticate(
 				new UsernamePasswordAuthenticationToken(authRequest.getUsername(),

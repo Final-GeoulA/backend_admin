@@ -57,6 +57,7 @@ public class SecurityConfig {
 		.httpBasic((basic) -> basic.disable())
 		.authorizeHttpRequests((auth) -> auth
 				.requestMatchers("/api/auth").permitAll()
+				.requestMatchers("/api/super").hasAuthority("SUPERADMIN")
 				.requestMatchers("/**").permitAll()
 				.anyRequest().authenticated())
 				.addFilterBefore(jwtTokenFilter, BasicAuthenticationFilter.class)
@@ -71,7 +72,7 @@ public class SecurityConfig {
 		
 		corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(
-                List.of("http://localhost:3001", "http://192.168.0.73:3001"));
+                List.of("http://localhost:3001", "http://192.168.0.22:3001"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         
