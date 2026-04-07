@@ -2,6 +2,7 @@ package kr.co.ictedu.geoulA_admin.users;
 
 import java.util.Date;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,12 +26,10 @@ public class UserInfo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE,generator = "seq_users")
 	private Long user_id;
-	
+	private int user_grade_id;
 	private String email;
-	
 	private String nickname;
-	
+	private String skin_type;
 	private String gender;
-	
 	private String udate;
 }

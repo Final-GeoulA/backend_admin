@@ -32,6 +32,7 @@ public class Admin implements UserDetails {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "admins_seq")
+	@Column(name = "admin_id", nullable = false)
 	private long id;
 
 	@Column(unique = true, nullable = false)
@@ -76,4 +77,6 @@ public class Admin implements UserDetails {
 	public String getUsername() {
 		return username;
 	}
+
+	
 }
