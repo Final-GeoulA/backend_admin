@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class UserInfoService {
@@ -40,6 +41,26 @@ public class UserInfoService {
 
 	public int getTotalPremium() {
 		return userRepository.getTotalPremium();
+	}
+
+	// 회원 등급 토글: 유료(2) <-> 무료(1) (SUPERADMIN 전용)
+	@Transactional
+	public UserInfo toggleUserGrade(Long userId) {
+		UserInfo user = userRepository.findById(userId)
+				.orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다: " + userId));
+		int newGrade = user.getUser_grade_id() == 2 ? 1 : 2;
+		userRepository.updateUserGrade(userId, newGrade);
+		user.setUser_grade_id(newGrade);
+		return user;
+	}
+
+	// 회원 삭제 (SUPERADMIN 전용)
+	@Transactional
+	public void deleteUser(Long userId) {
+		if (!userRepository.existsById(userId)) {
+			throw new RuntimeException("사용자를 찾을 수 없습니다: " + userId);
+		}
+		userRepository.deleteById(userId);
 	}
 
 }

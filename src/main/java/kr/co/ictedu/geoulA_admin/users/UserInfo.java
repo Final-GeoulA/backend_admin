@@ -31,5 +31,5 @@ public class UserInfo {
 	private String nickname;
 	private String skin_type;
 	private String gender;
-	private String udate;
+	private Date udate;
 }

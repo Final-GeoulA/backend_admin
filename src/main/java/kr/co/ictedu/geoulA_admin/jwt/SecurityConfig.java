@@ -56,10 +56,11 @@ public class SecurityConfig {
 		.formLogin((login) -> login.disable())
 		.httpBasic((basic) -> basic.disable())
 		.authorizeHttpRequests((auth) -> auth
-				.requestMatchers("/api/auth").permitAll()
-				.requestMatchers("/api/super").hasAuthority("SUPERADMIN")
-				.requestMatchers("/**").permitAll()
-				.anyRequest().authenticated())
+				.requestMatchers("/api/auth/**").permitAll()
+				.requestMatchers("/api/super/**").hasAuthority("SUPERADMIN")
+				.requestMatchers("/api/admin/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
+				.requestMatchers("/api/user/**").hasAnyAuthority("ADMIN", "SUPERADMIN")
+				.anyRequest().permitAll())
 				.addFilterBefore(jwtTokenFilter, BasicAuthenticationFilter.class)
 				.sessionManagement((session) -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.logout((logout) -> logout.disable());
@@ -72,7 +73,7 @@ public class SecurityConfig {
 		
 		corsConfiguration.setAllowCredentials(true);
         corsConfiguration.setAllowedOrigins(
-                List.of("http://localhost:3001", "http://192.168.0.22:3001"));
+                List.of("http://localhost:3001", "http://192.168.0.20:3001"));
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         

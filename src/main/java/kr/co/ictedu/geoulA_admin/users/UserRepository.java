@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 //select user_id,email,nickname,gender,udate FROM USERS WHERE user_id = 4;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 public interface UserRepository extends JpaRepository<UserInfo,Long>{
@@ -37,4 +38,9 @@ public interface UserRepository extends JpaRepository<UserInfo,Long>{
 	// 유료 회원 수
 	@Query(value = "SELECT COUNT(*) FROM users u WHERE u.user_grade_id = 2", nativeQuery = true)
 	int getTotalPremium();
+
+	// 회원 등급 변경 (SUPERADMIN)
+	@Modifying
+	@Query(value = "UPDATE users SET user_grade_id = :grade WHERE user_id = :userId", nativeQuery = true)
+	void updateUserGrade(@Param("userId") Long userId, @Param("grade") int grade);
 }
